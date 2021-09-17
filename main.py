@@ -1,6 +1,6 @@
 # Vf=Vi+at
 # CX = ((Vi+Vf)/2)t
-# CX=Vi+0.5at^2
+# CX=Vit+0.5at^2
 # Vf^2=Vi^2+2aCX
 import math
 
@@ -19,7 +19,8 @@ if not varDict["t"]:
             elif type(varDict["CX"] == float):
                 varDict["t"] = varDict["CX"] / ((varDict["Vf"] + varDict["Vi"]) / 2)
         elif type(varDict["a"]) == float and type(varDict["CX"]) == float:
-            varDict["t"] = math.sqrt((varDict["CX"] - varDict["Vi"]) / (0.5 * varDict["a"]))
+            varDict["Vf"] = math.sqrt((varDict["Vi"] ** 2) + (2 * varDict["a"] * varDict["CX"]))
+            varDict["t"] = (varDict["Vf"] - varDict["Vi"]) / varDict["a"]
     elif type(varDict["Vf"]) == float and type(varDict["a"]) == float and type(varDict["CX"]) == float:
         varDict["Vi"] = math.sqrt((varDict["Vf"] ** 2) - (2 * varDict["a"] * varDict["CX"]))
         varDict["t"] = (varDict["Vf"] - varDict["Vi"]) / varDict["a"]
@@ -35,19 +36,34 @@ if not varDict["CX"]:
         elif type(varDict["a"]) == float and type(varDict["t"]) == float:
             varDict["CX"] = varDict["Vi"] + (0.5 * varDict["a"] * (varDict("t")))
     elif type(varDict["t"]) == float and type(varDict["a"]) == float and type(varDict["Vf"]) == float:
-        varDict["Vi"] = varDict["Vf"] - (varDict["a"] * varDict["t"])
-        varDict["CX"] = varDict["Vi"] + (0.5 * varDict["a"] * (varDict("t")))
+        varDict["Vi"] = (varDict["Vf"] - (varDict["a"] * varDict["t"]))
+        varDict["CX"] = ((varDict["Vf"] + varDict["Vi"]) / 2) * varDict["t"]
 
+# solve for Vf
 if not varDict["Vf"]:
     if type(varDict["Vi"]) == float:
         if type(varDict["a"]) == float:
             if type(varDict["t"]) == float:
                 varDict["Vf"] = varDict["Vi"] - (varDict["a"] * varDict["t"])
             elif type(varDict["CX"]) == float:
-                varDict["Vf"] = math.sqrt((varDict["Vi"] ** 2) - (2 * varDict["a"] * varDict["CX"]))
+                varDict["Vf"] = math.sqrt((varDict["Vi"] ** 2) + (2 * varDict["a"] * varDict["CX"]))
         elif type(varDict["t"]) == float and type(varDict["CX"]) == float:
             varDict["Vf"] = (2 * (varDict["CX"] / varDict["t"])) - varDict["Vi"]
     elif type(varDict["t"]) == float and type(varDict["CX"]) == float and type(varDict["a"]) == float:
-        varDict["Vi"] = varDict["CX"] - (0.5 * (varDict["a"] * (varDict["t"] ** 2)))
+        varDict["Vi"] = (varDict["CX"] - (0.5 * (varDict["a"] * (varDict["t"] ** 2)))) / varDict["t"]
+        varDict["Vf"] = varDict["Vi"] + (varDict["a"] * varDict["t"])
 
+# solve for a
+if not varDict["a"]:
+    if type(varDict["Vi"]) == float:
+        if type(varDict["Vf"]) == float:
+            if type(varDict["t"]) == float:
+                varDict["a"] = (varDict["Vf"] - varDict["Vi"]) / varDict["t"]
+            elif type(varDict["CX"]) == float:
+                varDict["a"] = ((varDict["Vf"] ** 2) - (varDict["Vi"] ** 2)) / (2 * varDict["CX"])
+        elif type(varDict["t"]) == float and type(varDict["CX"]) == float:
+            varDict["a"] = (varDict["CX"] - varDict["Vi"]) / (0.5 * (varDict["t"] ** 2))
+    elif type(varDict["Vf"]) == float and type(varDict["t"]) == float and type(varDict["CX"]) == float:
+        varDict["Vi"] = (2 * varDict["t"] * varDict["CX"]) - varDict["Vf"]
+        varDict["a"] = (varDict["Vf"] - varDict["Vi"]) / varDict["t"]
 print(varDict)
